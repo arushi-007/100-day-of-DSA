@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+
 #define MAX 100
+
 typedef struct {
     int v, w;
 } Edge;
@@ -40,7 +42,41 @@ HeapNode pop() {
 int main() {
     int n, m, src;
     scanf("%d %d %d", &n, &m, &src);
-    Edge adj[MAX][MAX]; int deg[MAX]={0};
-    for(int i=0;i<m;i++){
-        int u,v,w; scanf("%d %d %d",&u,&v,&w);
-        adj[u][deg[u]].v=v; adj[u][deg[u
+
+    Edge adj[MAX][MAX];
+    int deg[MAX] = {0};
+
+    for (int i=0; i<m; i++) {
+        int u,v,w;
+        scanf("%d %d %d", &u, &v, &w);
+        adj[u][deg[u]].v = v;
+        adj[u][deg[u]].w = w;
+        deg[u]++;
+    }
+
+    int dist[MAX];
+    for (int i=0; i<n; i++) dist[i] = INT_MAX;
+    dist[src] = 0;
+    push(0, src);
+
+    while (heapSize) {
+        HeapNode h = pop();
+        int u = h.node;
+        if (h.dist > dist[u]) continue;
+        for (int i=0; i<deg[u]; i++) {
+            int v = adj[u][i].v;
+            int w = adj[u][i].w;
+            if (dist[u] + w < dist[v]) {
+                dist[v] = dist[u] + w;
+                push(dist[v], v);
+            }
+        }
+    }
+
+    for (int i=0; i<n; i++) {
+        if (dist[i] == INT_MAX) printf("Node %d: INF\n", i);
+        else printf("Node %d: %d\n", i, dist[i]);
+    }
+
+    return 0;
+}
