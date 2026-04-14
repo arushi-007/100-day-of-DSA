@@ -13,7 +13,6 @@ char firstNonRepeating(char *s) {
     }
     return '$';  
 }
-
 int main() {
     char s[100];
     scanf("%s", s);
